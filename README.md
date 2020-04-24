@@ -16,7 +16,7 @@ An introduction to using SQLite at the command line (using biological data examp
    
    You should be able to see the files for the tutorial in the files pane on the left side of the screen - this file in the centre panel - and a command prompt window on the right.
    
-   When you are ready to begin, select the tutorial file (sqlite-tutorial.md) in the files pane - and follow all of the steps by typing the commands in the command prompt window.
+   When you are ready to begin, select the tutorial file (SQLite tutorial.md) in the files pane - and follow all of the steps by typing the commands in the command prompt window.
    
    *(sometimes the command prompt ">" is not ready - just hit return in the command prompt window and it will appear)*
  
