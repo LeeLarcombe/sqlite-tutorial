@@ -1,6 +1,4 @@
 ﻿
-
-
 ## Introduction to SQL using SQLite
 
 In this session you are going to be provided with two tab-separated files containing data extracted from UniProt and IntAct. 
@@ -11,25 +9,21 @@ Both can be related through the unique, protein-specific UniProt accession ident
 
 You will then use this database to learn about different ways to query the data using SQL. SQLite implements most of the same SQL commands and syntax as other database systems that also use SQL such as MySQL, PostgreSQL and Oracle. The main difference is that whilst the others all require a server and client setup, SQLite works with databases as simple local files. This makes them easy to set up on a variety of systems, and easily portable.
 
-(If you have this as a paper handout, go to http://materials.nexastem.com/sqlite). Right-Click to download the files [***annotation.tab***](http://materials.nexastem.com/sqlite/annotation.tab) and [***interactome.tab***](http://materials.nexastem.com/sqlite/interactome.tab) to your desktop. 
-
->The data in the ***annotation.tab*** file was collected by using the UniProt API. Open the file in either the text editor or spreadsheet (Libre Office Sheets) application on your desktop and take a look at it.
-
-Spend a few minutes looking at the data and thinking about what you heard in the lecture about database design. We are going to import this data into a database table soon - what can you spot as **good** or **bad** about this data? (does it *really* matter?)
-
 ---
-### Part 1a. Navigating the system command line at the terminal (Linux or Mac)
+### Part 1. Navigating the system command line at the terminal
 
-The Linux or Unix (MacOS is a type of Unix underneath) command prompt, or shell, as it is also called, provides you with direct access to the operating system. It is a command interpreter: It interprets and executes all of your commands. The shell is really just another program that sits between your keyboard, the operating system, and other programs.
+For this tutorial you are using a command prompt, or shell, running on the Linux operating system. This is an important environment to get familiar with, and is available on Linux machines (of course), MacOS (the terminal app lets you access the  Unix underneath MacOS), Chomebooks with Crostini, or on Windows with the Windows Subsystem for Linux (WSL). The  shell provides you with direct access to the operating system. It is a command interpreter - the one you are using here is called Bash: It interprets and executes all of your commands. The shell is really just another program that sits between your keyboard, the operating system, and other programs.
+
+*If you are already familiar with the Linux shell, you can skip this part of the tutorial.*
 
 #### Navigating files and folders/directories
 
 Now lets progress, and look at navigating the Linux file system from the shell. There are three main commands we can use to do this: **pwd**, **ls**, and **cd**.
 
-The Linux filesystem is based on a file and directory structure which should be familiar to you. The first thing you'll want to know is where you are in the system. Since you just logged in you should be in your home directory. However, for learning purposes enter **pwd**
+The filesystem is based on a file and directory structure which should be familiar to you. The first thing you'll want to know is where you are in the system. Since you just logged in you should be in your home directory. However, for learning purposes enter **pwd**
 
 ```bash
-[prompt]$ pwd _press return_ (we will now dispense with the _press returns_)
+[prompt]> pwd _press return_ (we will now dispense with the _press returns_)
 ```
 
 **pwd** stands for “print working directory”, and so you should be rewarded with the absolute path to your current location. The absolute path is specified from the root (/) directory.
@@ -37,12 +31,12 @@ The Linux filesystem is based on a file and directory structure which should be 
 The next thing to do is list the files found in the current directory. This is done with the **ls** command, which stands for “list”. _Type_ **_ls_** _at the prompt now._
 
 ```bash
-[prompt]$ ls
+[prompt]> ls
 ```
 
-You should see a list of files in the current directory. There are some file indicators shown in the basic listing: * for programs or executable files (also often coloured green), / for directories (often blue), @ for symbolic links (often light blue, these are similar to windows shortcuts). The colours can vary depending on the configuration of your shell.
+You should see a list of files in the current directory. The repl.it shell is very basic, but on other machines there are usually some file indicators shown in the basic listing: * for programs or executable files (also often coloured green), / for directories (often blue), @ for symbolic links (often light blue, these are similar to windows shortcuts). The colours can vary depending on the configuration of your shell.
 
-Now you can tell basic file types apart, **ls** can be used to provide more information. Experiment with the following:
+**ls** can also be used to provide more information. Experiment with the following:
 
 **ls -a** this shows all files, even hidden files
 
@@ -57,15 +51,15 @@ Many shell commands have options like this. This is a good place to introduce pe
 This command invokes “man(ual) pages” for a command – these are fairly comprehensive help files. Try it now with:
 
 ```bash
-[prompt]$ man ls
+[prompt]> man ls
 
-[prompt]$  man pwd
+[prompt]> man pwd
 ```
 
 If you ever need help with a command – try **man** first. Some commands will have more basic help by appending --**help** (two hyphens) as an option. Try this for **ls**:
 
 ```bash
-[prompt]$ ls --help
+[prompt]> ls --help
 ```
 
 With these at your disposal, you should never need a printed manual!
@@ -75,23 +69,23 @@ Now that you know how to find out where you are, and list the files in a directo
 If you append a leading slash (/) to your path, it is absolute from the root directory. If you don't provide the leading slash then the path is relative to the current working directory. eg.
 
 ```bash
-[prompt]$  cd /
+[prompt]>  cd /
 ```
 
 This will take you to the root directory. _Generate a directory list_ with **ls** and **cd** to some of the other directories you see there. ie
 
 ```bash
-[prompt]$  cd /etc
+[prompt]>  cd /etc
 ```
 
 A useful addition to this is the use of leading **.** **(full stop)**  and **.\.** **(two full stops)** to the path. When specifying a relative path the **.** can be used to specify the current directory, and **.\.** can be used to specify the parent directory. eg.
 
 ```bash
-[prompt]$ cd / (this goes to the root directory)
+[prompt]> cd / (this goes to the root directory)
 
-[prompt]$ cd /etc (this goes to the etc directory)
+[prompt]> cd /etc (this goes to the etc directory)
 
-[prompt]$  cd .. (goes back to the root directory)
+[prompt]>  cd .. (goes back to the root directory)
 ```
 
 The last thing to note is that **cd** when typed alone, will return you to your home directory.
@@ -104,7 +98,7 @@ The last thing to note is that **cd** when typed alone, will return you to your 
 _Make sure you are in your home directory._ In order to achieve anything useful with a computer system you must be able to create, erase and manipulate files. Now it is time to create a new file. To create a new, empty file, use the command **touch**.
 
 ```bash
-[prompt]$ touch <filename> 
+[prompt]> touch <filename> 
 ```
 
 Some other important file operations are copying (**cp**), moving (**mv**), and deleting (**rm**). These are complimented by the command for making (**mkdir**) and removing (**rmdir**) directories.
@@ -114,24 +108,15 @@ Some other important file operations are copying (**cp**), moving (**mv**), and 
 Please spend some time experimenting further with all these commands. There is little point in examining the exact usage of these commands here, so investigate their function in more detail using **man**.
 
 ---
-### Part 1b. Navigating the system command line at the terminal (Windows)
-
-Windows users have a couple of options for shell access. On Windows 10 the system "command prompt" is likely a shell called "Windows Powershell". Alternatively on Windows 10 - and certainly on earlier versions - the default shell may be a version of DOS. The Windows 10 Powershell or DOS will understand some of the filesystem navigation commands given above for Linux (**ls**, **cd**, **mkdir** and **rmdir** for example). The older DOS system on Windows will not recognise these and, although equivalent functions are available, we won't cover them here. ***Let us know if you need some help with these***
-
->Alternatively, WIndows 10 now offers an embedded version of Linux that can be installed - call the Linux Subsystem for Windows. This will enable to you use Linux software on your Windows system, and recognises all of the commands introduced in the Linux section above. Installing the Linux Subsystem for Windows requires administrator access to you machine and is beyond the scope of this session - but if you are interested in learning more about it we can discuss it during one of the breaks.
-
----
 ### Part 2. SQLite command line - and creating a database
 
-When we load the SQLite command line we can provide it with the name of the database file we want to work with. If this database does not exist, SQLite creates an new empty database for us. 
+When we load the SQLite command line we can provide it with the name of the database file we want to work with. If this database does not exist, SQLite creates an new empty database for us (it will be written to a file - and appear in the filesystem which you exit SQLite). 
 
 Load the SQLite command line and create a new database with:
 
 ```bash
-prompt$ sqlite3 ./practical.db
+[prompt]> sqlite3 ./practical.db
 ```
-
-If you look in your file browser you should now see that the **practical.db** file has been created.
 
 #### First - two important commands
 
@@ -224,8 +209,6 @@ If importing the data goes badly, SQLite will tell you the errors. If it goes we
 
 ---
 ### Part 3. Basic Selections
-
-If everything went wrong in the previous sections, you can download a pre-made version of the database here: [database download](http://materials.nexastem.com/sqlite/practical.db)
 
 The benefit of using SQL is not the ability to just store information in a database but to be able to query the data in ways that help you gain insight into either what data you have, or the relationships between data.
 
@@ -396,76 +379,15 @@ SELECT geneSymbol FROM annotation
 You should now have the gene symbols of the two interacting proteins returned, based on searching for the gene symbol **CD44**.
 
 
-#### Select with a REGEX
-
-In the section covering basic **SELECT** queries, we looked at using string wildcards in a **LIKE** clause. These are useful when you want to match a string in part of a larger string, but not very flexible if you need a loose match or to match a pattern.
-
-Most programming and scripting languages can make use of a pattern matching approach called **Regular Expressions**. These enable simple - through to very complex/powerful - pattern matching operations. Fortunately most flavours of SQL will support regular expressions in some way - including SQLite!
-
-A full session on regular expressions is beyond the scope of today, and there are many good reference examples and help pages online - but let's look at a couple of examples to illustrate why you might want to learn more:
-
-Let's consider searching for proteins that contain the motif "***ISRTEAADLC***". Try the following statement:
-
-```SQL
-SELECT geneSymbol FROM annotation WHERE sequence LIKE "%ISRTEAADLC%";
-```
-
-You will find this motif is part of the sequence of our old friend **CD44**.
-
-Now let's try with a regular expression - we need to load an add-on to SQLite for this:
-
-```SQL
-.load "/usr/lib/sqlite3/pcre.so"
-```
-Now try the same as before query - but this time using a regular expression (**REGEXP**):
-
-```SQL
- SELECT geneSymbol FROM annotation WHERE sequence REGEXP('ISRTEAADLC');
-```
-
-You should get CD44 again. However, what if there was some variation in this motif? **LIKE** cannot help with this - but **REGEXP** can. We can use a dot **.** in the regex pattern to match any character at that position in the string:
-
-```SQL
-SELECT geneSymbol FROM annotation WHERE sequence REGEXP('ISR.E.A.L.');
-```
-
-Now you should find two matching proteins that contain this motif!
-
-If we want to specify a limited variation at a position, we can provide the alternatives to match in square brackets **[]** using the *or* character **|** - try:
-
-```SQL
-SELECT geneSymbol FROM annotation WHERE sequence REGEXP('I[S|P]R.E.A.L.');
-```
-
-Now you should find three matching proteins that contain this motif - with either an **S** or a **P** in position 2.
-
-You can also specify how many matches to make to a character - for example we could try **I[S|P]R...A.L** to expand the matches to the middle of the pattern - or we can use **I[S|P]R.{3}A.L** where we specify that we want **3** matches to any character (**.**) by using curly braces **{}** - try:
-
-```SQL
-SELECT geneSymbol FROM annotation WHERE sequence REGEXP('I[S|P]R.{3}A.L.');
-```
-
-You should now get about 20 hits. Don't forget you can also combine this with other things you have learnt:
-
-```SQL
-SELECT COUNT(geneSymbol) FROM annotation WHERE sequence REGEXP('I[S|P]R.{3}A.L.');
-```
-You did have 20 matches! What about:
-
-```SQL
-SELECT AVG(LENGTH(sequence)) FROM annotation WHERE sequence REGEXP('I[S|P]R.{3}A.L.');
-```
-The average length of a sequence that contains your motif.
-
 **A final challenge:** Can you work out what this query is going to do (try and work it out before you run it)?
 
 >Hint: there is something new here - a nested query, but we are using **IN** rather than an **=** for the **WHERE** clause. This is how we handle a nested **SELECT** that returns *multiple* results for the main query to cycle through!
 
 ```SQL
-SELECT MAX(LENGTH(sequence)) FROM annotation 
+SELECT geneSymbol,MAX(LENGTH(sequence)) FROM annotation 
 	INNER JOIN interactome ON interactome.proteinB = annotation.uniprotID 
 	WHERE interactome.proteinA IN (
-	SELECT uniprotID FROM annotation WHERE sequence REGEXP('I[S|P]R.{3}A.L.')); 
+	SELECT uniprotID FROM annotation WHERE geneSymbol LIKE "CYP%"); 
 ```
 
 
